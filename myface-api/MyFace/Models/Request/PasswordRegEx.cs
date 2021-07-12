@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Text.RegularExpressions;
-
-namespace MyFace.Models.Request
+﻿namespace MyFace.Models.Request
 {
     public static class PasswordRegEx
     {
