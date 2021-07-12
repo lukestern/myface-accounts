@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 
 namespace MyFace.Models.Request
 {
@@ -25,7 +27,8 @@ namespace MyFace.Models.Request
         public string CoverImageUrl { get; set; }
 
         [Required]
-        [StringLength(70, MinimumLength = 8) ]
+        [StringLength(70, MinimumLength = 8)]
+        [RegularExpression(PasswordRegEx.Expression) ]
         public string HashedPassword { get; set; }
     }
 }
