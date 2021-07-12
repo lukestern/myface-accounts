@@ -80,7 +80,7 @@ namespace MyFace.Repositories
             return insertResponse.Entity;
         }
 
-        static public string EncodeTo64(string toEncode)
+        public static string EncodeTo64(string toEncode)
         {
             byte[] toEncodeAsBytes
                   = System.Text.ASCIIEncoding.ASCII.GetBytes(toEncode);
