@@ -28,11 +28,8 @@ namespace MyFace.Controllers
         public ActionResult<UserResponse> GetById([FromRoute] int id)
         {
             var authHeader = HttpContext.Request.Headers["Authorization"];
+            //_users.UserHasAccess(authHeader)
             var user = _users.GetById(id);
-            if (authHeader != user.Auth)
-            {
-                return BadRequest();
-            }
             return new UserResponse(user);
         }
 

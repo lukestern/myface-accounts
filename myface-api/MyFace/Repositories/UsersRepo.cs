@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using MyFace.Models.Database;
 using MyFace.Models.Request;
@@ -73,19 +74,28 @@ namespace MyFace.Repositories
                 ProfileImageUrl = newUser.ProfileImageUrl,
                 CoverImageUrl = newUser.CoverImageUrl,
                 Salt = salt,
-                Auth = EncodeTo64($"{newUser.Username}:{HashPassword(newUser.Password, salt)}")
+                Password = HashPassword(newUser.Password, salt)
             });
             _context.SaveChanges();
 
             return insertResponse.Entity;
         }
 
-        public static string EncodeTo64(string toEncode)
+        //public static string EncDecoudFrom64(string toEncode)
+        //{
+        //    byte[] toEncodeAsBytes
+        //          = System.Text.ASCIIEncoding.ASCII.GetBytes(toEncode);
+        //    string returnValue
+        //          = System.Convert.ToBase64String(toEncodeAsBytes);
+        //    return returnValue;
+        //}
+
+        public static string DecodeFrom64(string encodedData)
         {
-            byte[] toEncodeAsBytes
-                  = System.Text.ASCIIEncoding.ASCII.GetBytes(toEncode);
-            string returnValue
-                  = System.Convert.ToBase64String(toEncodeAsBytes);
+            byte[] encodedDataAsBytes
+                = System.Convert.FromBase64String(encodedData);
+            string returnValue =
+               System.Text.ASCIIEncoding.ASCII.GetString(encodedDataAsBytes);
             return returnValue;
         }
 
@@ -131,6 +141,21 @@ namespace MyFace.Repositories
             var user = GetById(id);
             _context.Users.Remove(user);
             _context.SaveChanges();
+        }
+
+        public User GetByUsername(string username)
+        {
+            return _context.Users
+                .Single(user => user.Username == username);
+
+        }
+
+        public bool UserHasAccess(string authHeader)
+        {
+            var headerUsernamePassword = DecodeFrom64(authHeader).Split(":");
+            var user = GetByUsername(headerUsernamePassword[0]);
+            
+            return user != null && user.Password == HashPassword(headerUsernamePassword[1], user.Salt);
         }
     }
 }
