@@ -73,11 +73,20 @@ namespace MyFace.Repositories
                 ProfileImageUrl = newUser.ProfileImageUrl,
                 CoverImageUrl = newUser.CoverImageUrl,
                 Salt = salt,
-                Password = HashPassword(newUser.Password, salt)
+                Auth = EncodeTo64($"{newUser.Username}:{HashPassword(newUser.Password, salt)}")
             });
             _context.SaveChanges();
 
             return insertResponse.Entity;
+        }
+
+        static public string EncodeTo64(string toEncode)
+        {
+            byte[] toEncodeAsBytes
+                  = System.Text.ASCIIEncoding.ASCII.GetBytes(toEncode);
+            string returnValue
+                  = System.Convert.ToBase64String(toEncodeAsBytes);
+            return returnValue;
         }
 
         public static byte[] GetSalt()
