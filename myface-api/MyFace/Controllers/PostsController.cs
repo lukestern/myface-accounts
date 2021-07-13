@@ -25,6 +25,7 @@ namespace MyFace.Controllers
             {
                 return new NotFoundResult();
             }
+
             var posts = _posts.Search(searchRequest);
             var postCount = _posts.Count(searchRequest);
             return PostListResponse.Create(searchRequest, posts, postCount);
@@ -37,6 +38,7 @@ namespace MyFace.Controllers
             {
                 return new NotFoundResult();
             }
+
             var post = _posts.GetById(id);
             return new PostResponse(post);
         }
@@ -44,18 +46,22 @@ namespace MyFace.Controllers
         [HttpPost("create")]
         public IActionResult Create([FromBody] CreatePostRequest newPost)
         {
-            if (!_users.HasAccess(HttpContext.Request.Headers["Authorization"]))
+            var authHeader = HttpContext.Request.Headers["Authorization"];
+            if (!_users.HasAccess(authHeader))
             {
                 return new NotFoundResult();
             }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var post = _posts.Create(newPost);
+            var user = _users.GetByUsername(_users.GetUsernameFromAuthHeader(authHeader));
 
-            var url = Url.Action("GetById", new { id = post.Id });
+            var post = _posts.Create(newPost, user.Id);
+
+            var url = Url.Action("GetById", new {id = post.Id});
             var postResponse = new PostResponse(post);
             return Created(url, postResponse);
         }
@@ -67,6 +73,7 @@ namespace MyFace.Controllers
             {
                 return new NotFoundResult();
             }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -83,6 +90,7 @@ namespace MyFace.Controllers
             {
                 return new NotFoundResult();
             }
+
             _posts.Delete(id);
             return Ok();
         }

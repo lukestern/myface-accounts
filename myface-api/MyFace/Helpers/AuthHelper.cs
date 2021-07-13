@@ -10,7 +10,7 @@ namespace MyFace.Helpers
         public static string DecodeFrom64(string encodedData)
         {
             var encodedDataAsBytes = System.Convert.FromBase64String(encodedData);
-            var returnValue = System.Text.ASCIIEncoding.ASCII.GetString(encodedDataAsBytes);
+            var returnValue = Encoding.ASCII.GetString(encodedDataAsBytes);
             return returnValue;
         }
 
@@ -37,7 +37,7 @@ namespace MyFace.Helpers
         public static string[] GetUsernamePasswordFromAuthHeader(string authHeader)
         {
             var encodedUsernamePassword = authHeader.Substring("Basic ".Length).Trim();
-            Encoding encoding = Encoding.GetEncoding("iso-8859-1");
+            var encoding = Encoding.GetEncoding("iso-8859-1");
             return encoding.GetString(Convert.FromBase64String(encodedUsernamePassword)).Split(":");
         }
     }

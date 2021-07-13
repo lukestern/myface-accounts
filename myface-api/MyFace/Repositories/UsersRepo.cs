@@ -17,6 +17,7 @@ namespace MyFace.Repositories
         User Update(int id, UpdateUserRequest update);
         void Delete(int id);
         bool HasAccess(string authHeader);
+        string GetUsernameFromAuthHeader(string authHeader);
     }
 
     public class UsersRepo : IUsersRepo
@@ -112,13 +113,19 @@ namespace MyFace.Repositories
 
         public bool HasAccess(string authHeader)
         {
-            if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Basic"))
+            if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Basic"))
             {
-                var usernamePassword = AuthHelper.GetUsernamePasswordFromAuthHeader(authHeader);
-                var user = GetByUsername(usernamePassword[0]);
-                return user != null && user.Password == AuthHelper.HashPassword(usernamePassword[1], user.Salt);
+                return false;
             }
-            return false;
+            
+            var usernamePassword = AuthHelper.GetUsernamePasswordFromAuthHeader(authHeader);
+            var user = GetByUsername(usernamePassword[0]);
+            return user != null && user.Password == AuthHelper.HashPassword(usernamePassword[1], user.Salt);
+        }
+
+        public string GetUsernameFromAuthHeader(string authHeader)
+        {
+            return AuthHelper.GetUsernamePasswordFromAuthHeader(authHeader)[0];
         }
     }
 }
