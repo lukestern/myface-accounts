@@ -5,7 +5,7 @@ namespace MyFace.Models.Response
     public class LoginResponse
     {
         private readonly User _user;
-        private readonly bool IsLoggedIn;
+        public bool IsLoggedIn;
 
         public LoginResponse(User user, bool isLoggedIn)
         {

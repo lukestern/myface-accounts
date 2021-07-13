@@ -1,12 +1,9 @@
-﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+﻿
 using MyFace.Helpers;
 using MyFace.Models.Database;
 using MyFace.Models.Request;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace MyFace.Repositories
 {
@@ -19,7 +16,7 @@ namespace MyFace.Repositories
         User Create(CreateUserRequest newUser);
         User Update(int id, UpdateUserRequest update);
         void Delete(int id);
-        bool HasAccess(string authHeader);
+        bool HasAccess(User user, string password);
     }
 
     public class UsersRepo : IUsersRepo
@@ -113,15 +110,9 @@ namespace MyFace.Repositories
             _context.SaveChanges();
         }
 
-        public bool HasAccess(string authHeader)
+        public bool HasAccess(User user, string password)
         {
-            if (authHeader != null && authHeader.StartsWith("Basic"))
-            {
-                var usernamePassword = AuthHelper.GetUsernamePasswordFromAuthHeader(authHeader);
-                var user = GetByUsername(usernamePassword[0]);
-                return user != null && user.Password == AuthHelper.HashPassword(usernamePassword[1], user.Salt);
-            }     
-            return false;
+            return user != null && user.Password == AuthHelper.HashPassword(password, user.Salt);
         }
     }
 }

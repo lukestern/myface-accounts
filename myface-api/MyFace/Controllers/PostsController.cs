@@ -21,11 +21,6 @@ namespace MyFace.Controllers
         [HttpGet("")]
         public ActionResult<PostListResponse> Search([FromQuery] PostSearchRequest searchRequest)
         {
-            var authHeader = HttpContext.Request.Headers["Authorization"];
-            if (!_users.HasAccess(authHeader))
-            {
-                return new NotFoundResult();
-            }
             var posts = _posts.Search(searchRequest);
             var postCount = _posts.Count(searchRequest);
             return PostListResponse.Create(searchRequest, posts, postCount);

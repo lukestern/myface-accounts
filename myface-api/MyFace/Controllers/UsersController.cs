@@ -27,11 +27,6 @@ namespace MyFace.Controllers
         [HttpGet("{id}")]
         public ActionResult<UserResponse> GetById([FromRoute] int id)
         {
-            var authHeader = HttpContext.Request.Headers["Authorization"];
-            if (!_users.HasAccess(authHeader))
-            {
-                return new NotFoundResult();
-            }
             var user = _users.GetById(id);
             return new UserResponse(user);
         }
