@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace MyFace.Helpers
 {
@@ -31,6 +32,13 @@ namespace MyFace.Helpers
                 prf: KeyDerivationPrf.HMACSHA256,
                 iterationCount: 10000,
                 numBytesRequested: 256 / 8));
+        }
+
+        public static string[] GetUsernamePasswordFromAuthHeader(string authHeader)
+        {
+            var encodedUsernamePassword = authHeader.Substring("Basic ".Length).Trim();
+            Encoding encoding = Encoding.GetEncoding("iso-8859-1");
+            return encoding.GetString(Convert.FromBase64String(encodedUsernamePassword)).Split(":");
         }
     }
 }

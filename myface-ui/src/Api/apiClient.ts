@@ -40,6 +40,8 @@ export interface NewPost {
     userId: number;
 }
 
+//https://localhost:5001/login => username and password in the header
+
 export async function fetchUsers(searchTerm: string, page: number, pageSize: number): Promise<ListResponse<User>> {
     const response = await fetch(`https://localhost:5001/users?search=${searchTerm}&page=${page}&pageSize=${pageSize}`);
     return await response.json();

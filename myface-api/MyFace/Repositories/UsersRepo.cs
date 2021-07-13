@@ -117,9 +117,7 @@ namespace MyFace.Repositories
         {
             if (authHeader != null && authHeader.StartsWith("Basic"))
             {
-                var encodedUsernamePassword = authHeader.Substring("Basic ".Length).Trim();
-                Encoding encoding = Encoding.GetEncoding("iso-8859-1");
-                var usernamePassword = encoding.GetString(Convert.FromBase64String(encodedUsernamePassword)).Split(":");
+                var usernamePassword = AuthHelper.GetUsernamePasswordFromAuthHeader(authHeader);
                 var user = GetByUsername(usernamePassword[0]);
                 return user != null && user.Password == AuthHelper.HashPassword(usernamePassword[1], user.Salt);
             }     
