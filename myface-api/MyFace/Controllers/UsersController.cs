@@ -19,6 +19,10 @@ namespace MyFace.Controllers
         [HttpGet("")]
         public ActionResult<UserListResponse> Search([FromQuery] UserSearchRequest searchRequest)
         {
+            if (!_users.HasAccess(HttpContext.Request.Headers["Authorization"]))
+            {
+                return new NotFoundResult();
+            }
             var users = _users.Search(searchRequest);
             var userCount = _users.Count(searchRequest);
             return UserListResponse.Create(searchRequest, users, userCount);
@@ -27,8 +31,7 @@ namespace MyFace.Controllers
         [HttpGet("{id}")]
         public ActionResult<UserResponse> GetById([FromRoute] int id)
         {
-            var authHeader = HttpContext.Request.Headers["Authorization"];
-            if (!_users.HasAccess(authHeader))
+            if (!_users.HasAccess(HttpContext.Request.Headers["Authorization"]))
             {
                 return new NotFoundResult();
             }
@@ -39,6 +42,10 @@ namespace MyFace.Controllers
         [HttpPost("create")]
         public IActionResult Create([FromBody] CreateUserRequest newUser)
         {
+            if (!_users.HasAccess(HttpContext.Request.Headers["Authorization"]))
+            {
+                return new NotFoundResult();
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -54,6 +61,10 @@ namespace MyFace.Controllers
         [HttpPatch("{id}/update")]
         public ActionResult<UserResponse> Update([FromRoute] int id, [FromBody] UpdateUserRequest update)
         {
+            if (!_users.HasAccess(HttpContext.Request.Headers["Authorization"]))
+            {
+                return new NotFoundResult();
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -66,6 +77,10 @@ namespace MyFace.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete([FromRoute] int id)
         {
+            if (!_users.HasAccess(HttpContext.Request.Headers["Authorization"]))
+            {
+                return new NotFoundResult();
+            }
             _users.Delete(id);
             return Ok();
         }

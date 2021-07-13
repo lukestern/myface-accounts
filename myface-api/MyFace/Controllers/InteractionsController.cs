@@ -12,15 +12,21 @@ namespace MyFace.Controllers
         public class UsersController : ControllerBase
         {
             private readonly IInteractionsRepo _interactions;
+            private readonly IUsersRepo _users;
 
-            public UsersController(IInteractionsRepo interactions)
+            public UsersController(IInteractionsRepo interactions, IUsersRepo users)
             {
                 _interactions = interactions;
+                _users = users;
             }
 
             [HttpGet("")]
             public ActionResult<ListResponse<InteractionResponse>> Search([FromQuery] SearchRequest search)
             {
+                if (!_users.HasAccess(HttpContext.Request.Headers["Authorization"]))
+                {
+                    return new NotFoundResult();
+                }
                 var interactions = _interactions.Search(search);
                 var interactionCount = _interactions.Count(search);
                 return InteractionListResponse.Create(search, interactions, interactionCount);
@@ -29,6 +35,10 @@ namespace MyFace.Controllers
             [HttpGet("{id}")]
             public ActionResult<InteractionResponse> GetById([FromRoute] int id)
             {
+                if (!_users.HasAccess(HttpContext.Request.Headers["Authorization"]))
+            {
+                return new NotFoundResult();
+            }
                 var interaction = _interactions.GetById(id);
                 return new InteractionResponse(interaction);
             }
@@ -36,6 +46,10 @@ namespace MyFace.Controllers
             [HttpPost("create")]
             public IActionResult Create([FromBody] CreateInteractionRequest newUser)
             {
+                if (!_users.HasAccess(HttpContext.Request.Headers["Authorization"]))
+            {
+                return new NotFoundResult();
+            }
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
@@ -51,6 +65,10 @@ namespace MyFace.Controllers
             [HttpDelete("{id}")]
             public IActionResult Delete([FromRoute] int id)
             {
+                if (!_users.HasAccess(HttpContext.Request.Headers["Authorization"]))
+            {
+                return new NotFoundResult();
+            }
                 _interactions.Delete(id);
                 return Ok();
             }

@@ -21,8 +21,7 @@ namespace MyFace.Controllers
         [HttpGet("")]
         public ActionResult<PostListResponse> Search([FromQuery] PostSearchRequest searchRequest)
         {
-            var authHeader = HttpContext.Request.Headers["Authorization"];
-            if (!_users.HasAccess(authHeader))
+            if (!_users.HasAccess(HttpContext.Request.Headers["Authorization"]))
             {
                 return new NotFoundResult();
             }
@@ -34,6 +33,10 @@ namespace MyFace.Controllers
         [HttpGet("{id}")]
         public ActionResult<PostResponse> GetById([FromRoute] int id)
         {
+            if (!_users.HasAccess(HttpContext.Request.Headers["Authorization"]))
+            {
+                return new NotFoundResult();
+            }
             var post = _posts.GetById(id);
             return new PostResponse(post);
         }
@@ -41,6 +44,10 @@ namespace MyFace.Controllers
         [HttpPost("create")]
         public IActionResult Create([FromBody] CreatePostRequest newPost)
         {
+            if (!_users.HasAccess(HttpContext.Request.Headers["Authorization"]))
+            {
+                return new NotFoundResult();
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -56,6 +63,10 @@ namespace MyFace.Controllers
         [HttpPatch("{id}/update")]
         public ActionResult<PostResponse> Update([FromRoute] int id, [FromBody] UpdatePostRequest update)
         {
+            if (!_users.HasAccess(HttpContext.Request.Headers["Authorization"]))
+            {
+                return new NotFoundResult();
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -68,6 +79,10 @@ namespace MyFace.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete([FromRoute] int id)
         {
+            if (!_users.HasAccess(HttpContext.Request.Headers["Authorization"]))
+            {
+                return new NotFoundResult();
+            }
             _posts.Delete(id);
             return Ok();
         }

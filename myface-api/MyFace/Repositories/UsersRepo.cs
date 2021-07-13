@@ -1,12 +1,9 @@
-﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+﻿
 using MyFace.Helpers;
 using MyFace.Models.Database;
 using MyFace.Models.Request;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace MyFace.Repositories
 {
@@ -115,12 +112,12 @@ namespace MyFace.Repositories
 
         public bool HasAccess(string authHeader)
         {
-            if (authHeader != null && authHeader.StartsWith("Basic"))
+            if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Basic"))
             {
                 var usernamePassword = AuthHelper.GetUsernamePasswordFromAuthHeader(authHeader);
                 var user = GetByUsername(usernamePassword[0]);
                 return user != null && user.Password == AuthHelper.HashPassword(usernamePassword[1], user.Salt);
-            }     
+            }
             return false;
         }
     }
