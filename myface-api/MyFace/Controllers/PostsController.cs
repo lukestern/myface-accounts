@@ -19,15 +19,15 @@ namespace MyFace.Controllers
         [HttpGet("")]
         public ActionResult<PostListResponse> Search([FromQuery] PostSearchRequest searchRequest)
         {
-            System.Collections.Generic.IEnumerable<Models.Database.Post> posts = _posts.Search(searchRequest);
-            int postCount = _posts.Count(searchRequest);
+            var posts = _posts.Search(searchRequest);
+            var postCount = _posts.Count(searchRequest);
             return PostListResponse.Create(searchRequest, posts, postCount);
         }
 
         [HttpGet("{id}")]
         public ActionResult<PostResponse> GetById([FromRoute] int id)
         {
-            Models.Database.Post post = _posts.GetById(id);
+            var post = _posts.GetById(id);
             return new PostResponse(post);
         }
 
@@ -39,10 +39,10 @@ namespace MyFace.Controllers
                 return BadRequest(ModelState);
             }
 
-            Models.Database.Post post = _posts.Create(newPost);
+            var post = _posts.Create(newPost);
 
-            string url = Url.Action("GetById", new { id = post.Id });
-            PostResponse postResponse = new PostResponse(post);
+            var url = Url.Action("GetById", new { id = post.Id });
+            var postResponse = new PostResponse(post);
             return Created(url, postResponse);
         }
 
@@ -54,7 +54,7 @@ namespace MyFace.Controllers
                 return BadRequest(ModelState);
             }
 
-            Models.Database.Post post = _posts.Update(id, update);
+            var post = _posts.Update(id, update);
             return new PostResponse(post);
         }
 

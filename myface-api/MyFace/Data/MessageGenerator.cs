@@ -208,9 +208,6 @@ namespace MyFace.Data
             "Before he moved to the inner city, he had always believed that security complexes were psychological."
         };
 
-        public static string GetMessage(int index)
-        {
-            return _messages[index];
-        }
+        public static string GetMessage(int index) => _messages[index];
     }
 }

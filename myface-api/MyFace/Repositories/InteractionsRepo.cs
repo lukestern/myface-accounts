@@ -31,19 +31,13 @@ namespace MyFace.Repositories
                 .Take(search.PageSize);
         }
 
-        public int Count(SearchRequest search)
-        {
-            return _context.Interactions.Count();
-        }
+        public int Count(SearchRequest search) => _context.Interactions.Count();
 
-        public Interaction GetById(int id)
-        {
-            return _context.Interactions.Single(i => i.Id == id);
-        }
+        public Interaction GetById(int id) => _context.Interactions.Single(i => i.Id == id);
 
         public Interaction Create(CreateInteractionRequest create)
         {
-            Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<Interaction> insertResult = _context.Interactions.Add(new Interaction
+            var insertResult = _context.Interactions.Add(new Interaction
             {
                 Date = DateTime.Now,
                 Type = create.InteractionType,
@@ -56,7 +50,7 @@ namespace MyFace.Repositories
 
         public void Delete(int id)
         {
-            Interaction interaction = GetById(id);
+            var interaction = GetById(id);
             _context.Interactions.Remove(interaction);
             _context.SaveChanges();
         }

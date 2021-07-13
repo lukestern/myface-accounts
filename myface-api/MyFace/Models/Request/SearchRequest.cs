@@ -34,7 +34,7 @@
         {
             get
             {
-                string filters = "";
+                var filters = "";
 
                 if (PostedBy != null)
                 {

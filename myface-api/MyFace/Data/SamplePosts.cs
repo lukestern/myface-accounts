@@ -8,10 +8,7 @@ namespace MyFace.Data
     {
         public static int NumberOfPosts => 200;
 
-        public static IEnumerable<Post> GetPosts()
-        {
-            return Enumerable.Range(0, NumberOfPosts).Select(CreateRandomPost);
-        }
+        public static IEnumerable<Post> GetPosts() => Enumerable.Range(0, NumberOfPosts).Select(CreateRandomPost);
 
         private static Post CreateRandomPost(int index)
         {

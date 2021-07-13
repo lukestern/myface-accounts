@@ -11,13 +11,13 @@ namespace MyFace.Data
         {
             // Posts happen longer ago than the max interaction age so that we don't risk
             // interacting with a post before it is created.
-            int randomMinsAgo = _random.Next(1, _maxInteractionAge);
+            var randomMinsAgo = _random.Next(1, _maxInteractionAge);
             return DateTime.Now.AddMinutes(-1 * (_maxInteractionAge + randomMinsAgo));
         }
 
         public static DateTime GetInteractionDate()
         {
-            int randomMinsAgo = _random.Next(1, _maxInteractionAge);
+            var randomMinsAgo = _random.Next(1, _maxInteractionAge);
             return DateTime.Now.AddMinutes(-1 * randomMinsAgo);
         }
     }

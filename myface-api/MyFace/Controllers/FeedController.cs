@@ -18,8 +18,8 @@ namespace MyFace.Controllers
         [HttpGet("")]
         public ActionResult<FeedModel> GetFeed([FromQuery] FeedSearchRequest searchRequest)
         {
-            System.Collections.Generic.IEnumerable<Models.Database.Post> posts = _posts.SearchFeed(searchRequest);
-            int postCount = _posts.Count(searchRequest);
+            var posts = _posts.SearchFeed(searchRequest);
+            var postCount = _posts.Count(searchRequest);
             return FeedModel.Create(searchRequest, posts, postCount);
         }
     }

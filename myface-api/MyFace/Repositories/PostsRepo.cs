@@ -75,7 +75,7 @@ namespace MyFace.Repositories
 
         public Post Create(CreatePostRequest post)
         {
-            Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<Post> insertResult = _context.Posts.Add(new Post
+            var insertResult = _context.Posts.Add(new Post
             {
                 ImageUrl = post.ImageUrl,
                 Message = post.Message,
@@ -88,7 +88,7 @@ namespace MyFace.Repositories
 
         public Post Update(int id, UpdatePostRequest update)
         {
-            Post post = GetById(id);
+            var post = GetById(id);
 
             post.Message = update.Message;
             post.ImageUrl = update.ImageUrl;
@@ -101,7 +101,7 @@ namespace MyFace.Repositories
 
         public void Delete(int id)
         {
-            Post post = GetById(id);
+            var post = GetById(id);
             _context.Posts.Remove(post);
             _context.SaveChanges();
         }

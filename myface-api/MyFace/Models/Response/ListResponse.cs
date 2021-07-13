@@ -29,10 +29,7 @@ namespace MyFace.Models.Response
             _filters = search.Filters;
         }
 
-        private bool HasNextPage()
-        {
-            return Page * PageSize < TotalNumberOfItems;
-        }
+        private bool HasNextPage() => Page * PageSize < TotalNumberOfItems;
     }
 
     public class PostListResponse : ListResponse<PostResponse>
@@ -42,7 +39,7 @@ namespace MyFace.Models.Response
 
         public static PostListResponse Create(SearchRequest search, IEnumerable<Post> posts, int totalNumberOfItems)
         {
-            IEnumerable<PostResponse> postModels = posts.Select(post => new PostResponse(post));
+            var postModels = posts.Select(post => new PostResponse(post));
             return new PostListResponse(search, postModels, totalNumberOfItems);
         }
     }
@@ -54,7 +51,7 @@ namespace MyFace.Models.Response
 
         public static UserListResponse Create(SearchRequest search, IEnumerable<User> users, int totalNumberOfItems)
         {
-            IEnumerable<UserResponse> userModels = users.Select(user => new UserResponse(user));
+            var userModels = users.Select(user => new UserResponse(user));
             return new UserListResponse(search, userModels, totalNumberOfItems);
         }
     }
@@ -66,7 +63,7 @@ namespace MyFace.Models.Response
 
         public static InteractionListResponse Create(SearchRequest search, IEnumerable<Interaction> interactions, int totalNumberOfItems)
         {
-            IEnumerable<InteractionResponse> interactionModels = interactions.Select(i => new InteractionResponse(i));
+            var interactionModels = interactions.Select(i => new InteractionResponse(i));
             return new InteractionListResponse(search, interactionModels, totalNumberOfItems);
         }
     }

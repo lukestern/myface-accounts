@@ -15,10 +15,7 @@ namespace MyFace.Data
                 .Select(CreateRandomInteraction);
         }
 
-        private static Tuple<int, int> CreateRandomPostUserPair()
-        {
-            return new Tuple<int, int>(RandomNumberGenerator.GetPostId(), RandomNumberGenerator.GetUserId());
-        }
+        private static Tuple<int, int> CreateRandomPostUserPair() => new Tuple<int, int>(RandomNumberGenerator.GetPostId(), RandomNumberGenerator.GetUserId());
 
         private static Interaction CreateRandomInteraction(Tuple<int, int> postUserPair)
         {

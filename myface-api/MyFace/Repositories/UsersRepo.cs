@@ -60,10 +60,16 @@ namespace MyFace.Repositories
                 .Single(user => user.Id == id);
         }
 
+        public User GetByUsername(string username)
+        {
+            return _context.Users
+                .Single(user => user.Username == username);
+        }
+
         public User Create(CreateUserRequest newUser)
         {
-            byte[] salt = GetSalt();
-            Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<User> insertResponse = _context.Users.Add(new User
+            var salt = GetSalt();
+            var insertResponse = _context.Users.Add(new User
             {
                 FirstName = newUser.FirstName,
                 LastName = newUser.LastName,
@@ -81,17 +87,17 @@ namespace MyFace.Repositories
 
         public static string DecodeFrom64(string encodedData)
         {
-            byte[] encodedDataAsBytes
+            var encodedDataAsBytes
                 = System.Convert.FromBase64String(encodedData);
-            string returnValue =
+            var returnValue =
                System.Text.ASCIIEncoding.ASCII.GetString(encodedDataAsBytes);
             return returnValue;
         }
 
         public static byte[] GetSalt()
         {
-            byte[] salt = new byte[128 / 8];
-            using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
+            var salt = new byte[128 / 8];
+            using (var rng = RandomNumberGenerator.Create())
             {
                 rng.GetBytes(salt);
             }
@@ -110,7 +116,7 @@ namespace MyFace.Repositories
 
         public User Update(int id, UpdateUserRequest update)
         {
-            User user = GetById(id);
+            var user = GetById(id);
 
             user.FirstName = update.FirstName;
             user.LastName = update.LastName;
@@ -127,21 +133,15 @@ namespace MyFace.Repositories
 
         public void Delete(int id)
         {
-            User user = GetById(id);
+            var user = GetById(id);
             _context.Users.Remove(user);
             _context.SaveChanges();
         }
 
-        public User GetByUsername(string username)
-        {
-            return _context.Users
-                .Single(user => user.Username == username);
-        }
-
         public bool UserHasAccess(string authHeader)
         {
-            string[] headerUsernamePassword = DecodeFrom64(authHeader).Split(":");
-            User user = GetByUsername(headerUsernamePassword[0]);
+            var headerUsernamePassword = DecodeFrom64(authHeader).Split(":");
+            var user = GetByUsername(headerUsernamePassword[0]);
 
             return user != null && user.Password == HashPassword(headerUsernamePassword[1], user.Salt);
         }

@@ -113,14 +113,11 @@ namespace MyFace.Data
             new List<string> { "Marjy", "Beadell", "mbeadell2r", "mbeadell2r@delicious.com" }
         };
 
-        public static IEnumerable<User> GetUsers()
-        {
-            return Enumerable.Range(0, NumberOfUsers).Select(CreateRandomUser);
-        }
+        public static IEnumerable<User> GetUsers() => Enumerable.Range(0, NumberOfUsers).Select(CreateRandomUser);
 
         private static User CreateRandomUser(int index)
         {
-            byte[] salt = UsersRepo.GetSalt();
+            var salt = UsersRepo.GetSalt();
             return new User
             {
                 FirstName = _data[index][0],
@@ -129,7 +126,7 @@ namespace MyFace.Data
                 Email = _data[index][3],
                 ProfileImageUrl = ImageGenerator.GetProfileImage(_data[index][2]),
                 CoverImageUrl = ImageGenerator.GetCoverImage(index),
-                Auth = UsersRepo.HashPassword("password", salt),
+                Password = UsersRepo.HashPassword("password", salt),
                 Salt = salt
             };
         }

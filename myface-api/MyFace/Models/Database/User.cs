@@ -9,7 +9,7 @@ namespace MyFace.Models.Database
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public string Auth { get; set; }
+        public string Password { get; set; }
         public byte[] Salt { get; set; }
 
         public string FirstName { get; set; }

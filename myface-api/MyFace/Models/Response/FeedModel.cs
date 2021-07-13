@@ -46,7 +46,7 @@ namespace MyFace.Models.Response
 
         public static FeedModel Create(SearchRequest searchRequest, IEnumerable<Post> posts, int totalNumberOfItems)
         {
-            IEnumerable<FeedPostModel> feedModels = posts.Select(p => new FeedPostModel(p));
+            var feedModels = posts.Select(p => new FeedPostModel(p));
             return new FeedModel(searchRequest, feedModels, totalNumberOfItems);
         }
     }

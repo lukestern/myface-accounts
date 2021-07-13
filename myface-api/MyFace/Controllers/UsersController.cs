@@ -19,17 +19,17 @@ namespace MyFace.Controllers
         [HttpGet("")]
         public ActionResult<UserListResponse> Search([FromQuery] UserSearchRequest searchRequest)
         {
-            System.Collections.Generic.IEnumerable<Models.Database.User> users = _users.Search(searchRequest);
-            int userCount = _users.Count(searchRequest);
+            var users = _users.Search(searchRequest);
+            var userCount = _users.Count(searchRequest);
             return UserListResponse.Create(searchRequest, users, userCount);
         }
 
         [HttpGet("{id}")]
         public ActionResult<UserResponse> GetById([FromRoute] int id)
         {
-            Microsoft.Extensions.Primitives.StringValues authHeader = HttpContext.Request.Headers["Authorization"];
+            var authHeader = HttpContext.Request.Headers["Authorization"];
             //_users.UserHasAccess(authHeader)
-            Models.Database.User user = _users.GetById(id);
+            var user = _users.GetById(id);
             return new UserResponse(user);
         }
 
@@ -41,10 +41,10 @@ namespace MyFace.Controllers
                 return BadRequest(ModelState);
             }
 
-            Models.Database.User user = _users.Create(newUser);
+            var user = _users.Create(newUser);
 
-            string url = Url.Action("GetById", new { id = user.Id });
-            UserResponse responseViewModel = new UserResponse(user);
+            var url = Url.Action("GetById", new { id = user.Id });
+            var responseViewModel = new UserResponse(user);
             return Created(url, responseViewModel);
         }
 
@@ -56,7 +56,7 @@ namespace MyFace.Controllers
                 return BadRequest(ModelState);
             }
 
-            Models.Database.User user = _users.Update(id, update);
+            var user = _users.Update(id, update);
             return new UserResponse(user);
         }
 

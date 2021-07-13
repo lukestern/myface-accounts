@@ -21,15 +21,15 @@ namespace MyFace.Controllers
             [HttpGet("")]
             public ActionResult<ListResponse<InteractionResponse>> Search([FromQuery] SearchRequest search)
             {
-                System.Collections.Generic.IEnumerable<Models.Database.Interaction> interactions = _interactions.Search(search);
-                int interactionCount = _interactions.Count(search);
+                var interactions = _interactions.Search(search);
+                var interactionCount = _interactions.Count(search);
                 return InteractionListResponse.Create(search, interactions, interactionCount);
             }
 
             [HttpGet("{id}")]
             public ActionResult<InteractionResponse> GetById([FromRoute] int id)
             {
-                Models.Database.Interaction interaction = _interactions.GetById(id);
+                var interaction = _interactions.GetById(id);
                 return new InteractionResponse(interaction);
             }
 
@@ -41,10 +41,10 @@ namespace MyFace.Controllers
                     return BadRequest(ModelState);
                 }
 
-                Models.Database.Interaction interaction = _interactions.Create(newUser);
+                var interaction = _interactions.Create(newUser);
 
-                string url = Url.Action("GetById", new { id = interaction.Id });
-                InteractionResponse responseViewModel = new InteractionResponse(interaction);
+                var url = Url.Action("GetById", new { id = interaction.Id });
+                var responseViewModel = new InteractionResponse(interaction);
                 return Created(url, responseViewModel);
             }
 
