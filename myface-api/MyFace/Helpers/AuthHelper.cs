@@ -8,10 +8,8 @@ namespace MyFace.Helpers
     {
         public static string DecodeFrom64(string encodedData)
         {
-            var encodedDataAsBytes
-                = System.Convert.FromBase64String(encodedData);
-            var returnValue =
-               System.Text.ASCIIEncoding.ASCII.GetString(encodedDataAsBytes);
+            var encodedDataAsBytes = System.Convert.FromBase64String(encodedData);
+            var returnValue = System.Text.ASCIIEncoding.ASCII.GetString(encodedDataAsBytes);
             return returnValue;
         }
 

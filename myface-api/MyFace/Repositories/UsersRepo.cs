@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace MyFace.Repositories
 {
@@ -19,7 +20,6 @@ namespace MyFace.Repositories
         User Update(int id, UpdateUserRequest update);
         void Delete(int id);
         bool HasAccess(string authHeader);
-
     }
 
     public class UsersRepo : IUsersRepo
@@ -115,13 +115,14 @@ namespace MyFace.Repositories
 
         public bool HasAccess(string authHeader)
         {
-            if (!string.IsNullOrEmpty(authHeader))
+            if (authHeader != null && authHeader.StartsWith("Basic"))
             {
-                var headerUsernamePassword = AuthHelper.DecodeFrom64(authHeader.Split(" ")[1]).Split(":");
-                var user = GetByUsername(headerUsernamePassword[0]);
-
-                return user != null && user.Password == AuthHelper.HashPassword(headerUsernamePassword[1], user.Salt);
-            }
+                var encodedUsernamePassword = authHeader.Substring("Basic ".Length).Trim();
+                Encoding encoding = Encoding.GetEncoding("iso-8859-1");
+                var usernamePassword = encoding.GetString(Convert.FromBase64String(encodedUsernamePassword)).Split(":");
+                var user = GetByUsername(usernamePassword[0]);
+                return user != null && user.Password == AuthHelper.HashPassword(usernamePassword[1], user.Salt);
+            }     
             return false;
         }
     }
