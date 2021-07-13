@@ -47,50 +47,75 @@ export interface NewPost {
 }
 
 
-export async function fetchLogin(encodedUsernamePassword: string): Promise<Login> {
-    const response = await fetch(`https://localhost:5001/login`, {
+export async function fetchLogin(encodedAuth: string): Promise<Login> {
+    const response = await fetch(`https://localhost:5001/users`, {
         headers: {
-            'Authorization': `Basic ${encodedUsernamePassword}`
+            'Authorization': `Basic ${encodedAuth}`
         }
     });
     return await response.json();
 }
 
-export async function fetchUsers(searchTerm: string, page: number, pageSize: number): Promise<ListResponse<User>> {
-    const response = await fetch(`https://localhost:5001/users?search=${searchTerm}&page=${page}&pageSize=${pageSize}`);
+export async function fetchUsers(searchTerm: string, page: number, pageSize: number, encodedAuth: string): Promise<ListResponse<User>> {
+    const response = await fetch(`https://localhost:5001/users?search=${searchTerm}&page=${page}&pageSize=${pageSize}`, {
+        headers: {
+            'Authorization': `Basic ${encodedAuth}`
+        }
+    });
     return await response.json();
 }
 
-export async function fetchUser(userId: string | number): Promise<User> {
-    const response = await fetch(`https://localhost:5001/users/${userId}`);
+export async function fetchUser(userId: string | number, encodedAuth: string): Promise<User> {
+    const response = await fetch(`https://localhost:5001/users/${userId}`, {
+        headers: {
+            'Authorization': `Basic ${encodedAuth}`
+        }
+    });
     return await response.json();
 }
 
-export async function fetchPosts(page: number, pageSize: number): Promise<ListResponse<Post>> {
-    const response = await fetch(`https://localhost:5001/feed?page=${page}&pageSize=${pageSize}`);
+export async function fetchPosts(page: number, pageSize: number, encodedAuth: string): Promise<ListResponse<Post>> {
+    const response = await fetch(`https://localhost:5001/feed?page=${page}&pageSize=${pageSize}`, {
+        headers: {
+            'Authorization': `Basic ${encodedAuth}`
+        }
+    });
     return await response.json();
 }
 
-export async function fetchPostsForUser(page: number, pageSize: number, userId: string | number) {
-    const response = await fetch(`https://localhost:5001/feed?page=${page}&pageSize=${pageSize}&postedBy=${userId}`);
+export async function fetchPostsForUser(page: number, pageSize: number, userId: string | number, encodedAuth: string) {
+    const response = await fetch(`https://localhost:5001/feed?page=${page}&pageSize=${pageSize}&postedBy=${userId}`, {
+        headers: {
+            'Authorization': `Basic ${encodedAuth}`
+        }
+    });
     return await response.json();
 }
 
-export async function fetchPostsLikedBy(page: number, pageSize: number, userId: string | number) {
-    const response = await fetch(`https://localhost:5001/feed?page=${page}&pageSize=${pageSize}&likedBy=${userId}`);
+export async function fetchPostsLikedBy(page: number, pageSize: number, userId: string | number, encodedAuth: string) {
+    const response = await fetch(`https://localhost:5001/feed?page=${page}&pageSize=${pageSize}&likedBy=${userId}`, {
+        headers: {
+            'Authorization': `Basic ${encodedAuth}`
+        }
+    });
     return await response.json();
 }
 
-export async function fetchPostsDislikedBy(page: number, pageSize: number, userId: string | number) {
-    const response = await fetch(`https://localhost:5001/feed?page=${page}&pageSize=${pageSize}&dislikedBy=${userId}`);
+export async function fetchPostsDislikedBy(page: number, pageSize: number, userId: string | number, encodedAuth: string) {
+    const response = await fetch(`https://localhost:5001/feed?page=${page}&pageSize=${pageSize}&dislikedBy=${userId}`, {
+        headers: {
+            'Authorization': `Basic ${encodedAuth}`
+        }
+    });
     return await response.json();
 }
 
-export async function createPost(newPost: NewPost) {
+export async function createPost(newPost: NewPost, encodedAuth: string) {
     const response = await fetch(`https://localhost:5001/posts/create`, {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            'Authorization': `Basic ${encodedAuth}`
         },
         body: JSON.stringify(newPost),
     });

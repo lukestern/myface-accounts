@@ -1,7 +1,7 @@
 ﻿import React, { FormEvent, useContext, useState } from 'react';
 import { Page } from "../Page/Page";
 import { LoginContext } from "../../Components/LoginManager/LoginManager";
-import { fetchLogin } from "../../Api/apiClient";
+import { fetchLogin, fetchUser } from "../../Api/apiClient";
 import "./Login.scss";
 
 export function Login(): JSX.Element {
