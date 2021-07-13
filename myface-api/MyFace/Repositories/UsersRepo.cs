@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using MyFace.Helpers;
 using MyFace.Models.Database;
 using MyFace.Models.Request;
 using System;
@@ -13,9 +14,12 @@ namespace MyFace.Repositories
         IEnumerable<User> Search(UserSearchRequest search);
         int Count(UserSearchRequest search);
         User GetById(int id);
+        User GetByUsername(string username);
         User Create(CreateUserRequest newUser);
         User Update(int id, UpdateUserRequest update);
         void Delete(int id);
+        bool HasAccess(string authHeader);
+
     }
 
     public class UsersRepo : IUsersRepo
@@ -68,7 +72,7 @@ namespace MyFace.Repositories
 
         public User Create(CreateUserRequest newUser)
         {
-            var salt = GetSalt();
+            var salt = AuthHelper.GetSalt();
             var insertResponse = _context.Users.Add(new User
             {
                 FirstName = newUser.FirstName,
@@ -78,40 +82,11 @@ namespace MyFace.Repositories
                 ProfileImageUrl = newUser.ProfileImageUrl,
                 CoverImageUrl = newUser.CoverImageUrl,
                 Salt = salt,
-                Password = HashPassword(newUser.Password, salt)
+                Password = AuthHelper.HashPassword(newUser.Password, salt)
             });
             _context.SaveChanges();
 
             return insertResponse.Entity;
-        }
-
-        public static string DecodeFrom64(string encodedData)
-        {
-            var encodedDataAsBytes
-                = System.Convert.FromBase64String(encodedData);
-            var returnValue =
-               System.Text.ASCIIEncoding.ASCII.GetString(encodedDataAsBytes);
-            return returnValue;
-        }
-
-        public static byte[] GetSalt()
-        {
-            var salt = new byte[128 / 8];
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(salt);
-            }
-            return salt;
-        }
-
-        public static string HashPassword(string password, byte[] salt)
-        {
-            return Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                password: password,
-                salt: salt,
-                prf: KeyDerivationPrf.HMACSHA256,
-                iterationCount: 10000,
-                numBytesRequested: 256 / 8));
         }
 
         public User Update(int id, UpdateUserRequest update)
@@ -138,12 +113,16 @@ namespace MyFace.Repositories
             _context.SaveChanges();
         }
 
-        public bool UserHasAccess(string authHeader)
+        public bool HasAccess(string authHeader)
         {
-            var headerUsernamePassword = DecodeFrom64(authHeader).Split(":");
-            var user = GetByUsername(headerUsernamePassword[0]);
+            if (!string.IsNullOrEmpty(authHeader))
+            {
+                var headerUsernamePassword = AuthHelper.DecodeFrom64(authHeader.Split(" ")[1]).Split(":");
+                var user = GetByUsername(headerUsernamePassword[0]);
 
-            return user != null && user.Password == HashPassword(headerUsernamePassword[1], user.Salt);
+                return user != null && user.Password == AuthHelper.HashPassword(headerUsernamePassword[1], user.Salt);
+            }
+            return false;
         }
     }
 }
