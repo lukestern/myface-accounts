@@ -78,7 +78,7 @@ export async function createPost(newPost: NewPost) {
         },
         body: JSON.stringify(newPost),
     });
-    
+
     if (!response.ok) {
         throw new Error(await response.json())
     }

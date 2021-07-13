@@ -10,15 +10,22 @@ namespace MyFace.Controllers
     public class PostsController : ControllerBase
     {
         private readonly IPostsRepo _posts;
+        private readonly IUsersRepo _users;
 
-        public PostsController(IPostsRepo posts)
+        public PostsController(IPostsRepo posts, IUsersRepo users)
         {
             _posts = posts;
+            _users = users;
         }
 
         [HttpGet("")]
         public ActionResult<PostListResponse> Search([FromQuery] PostSearchRequest searchRequest)
         {
+            var authHeader = HttpContext.Request.Headers["Authorization"];
+            if (!_users.HasAccess(authHeader))
+            {
+                return new NotFoundResult();
+            }
             var posts = _posts.Search(searchRequest);
             var postCount = _posts.Count(searchRequest);
             return PostListResponse.Create(searchRequest, posts, postCount);

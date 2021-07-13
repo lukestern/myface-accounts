@@ -11,6 +11,7 @@ export function Login(): JSX.Element {
     
     function tryLogin(event: FormEvent) {
         event.preventDefault();
+        // if (hit the backend) is authenticated
         loginContext.logIn();
     }
     
