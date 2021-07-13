@@ -2,7 +2,7 @@
 {
     public static class PasswordRegEx
     {
-        public const string Expression = 
+        public const string Expression =
            @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$";
     }
 }

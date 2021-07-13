@@ -1,12 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using MyFace.Models.Database;
+using MyFace.Models.Request;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using MyFace.Models.Database;
-using MyFace.Models.Request;
 
 namespace MyFace.Repositories
 {
@@ -64,8 +62,8 @@ namespace MyFace.Repositories
 
         public User Create(CreateUserRequest newUser)
         {
-            var salt = GetSalt();
-            var insertResponse = _context.Users.Add(new User
+            byte[] salt = GetSalt();
+            Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<User> insertResponse = _context.Users.Add(new User
             {
                 FirstName = newUser.FirstName,
                 LastName = newUser.LastName,
@@ -81,15 +79,6 @@ namespace MyFace.Repositories
             return insertResponse.Entity;
         }
 
-        //public static string EncDecoudFrom64(string toEncode)
-        //{
-        //    byte[] toEncodeAsBytes
-        //          = System.Text.ASCIIEncoding.ASCII.GetBytes(toEncode);
-        //    string returnValue
-        //          = System.Convert.ToBase64String(toEncodeAsBytes);
-        //    return returnValue;
-        //}
-
         public static string DecodeFrom64(string encodedData)
         {
             byte[] encodedDataAsBytes
@@ -102,7 +91,7 @@ namespace MyFace.Repositories
         public static byte[] GetSalt()
         {
             byte[] salt = new byte[128 / 8];
-            using (var rng = RandomNumberGenerator.Create())
+            using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
             {
                 rng.GetBytes(salt);
             }
@@ -121,7 +110,7 @@ namespace MyFace.Repositories
 
         public User Update(int id, UpdateUserRequest update)
         {
-            var user = GetById(id);
+            User user = GetById(id);
 
             user.FirstName = update.FirstName;
             user.LastName = update.LastName;
@@ -138,7 +127,7 @@ namespace MyFace.Repositories
 
         public void Delete(int id)
         {
-            var user = GetById(id);
+            User user = GetById(id);
             _context.Users.Remove(user);
             _context.SaveChanges();
         }
@@ -147,14 +136,13 @@ namespace MyFace.Repositories
         {
             return _context.Users
                 .Single(user => user.Username == username);
-
         }
 
         public bool UserHasAccess(string authHeader)
         {
-            var headerUsernamePassword = DecodeFrom64(authHeader).Split(":");
-            var user = GetByUsername(headerUsernamePassword[0]);
-            
+            string[] headerUsernamePassword = DecodeFrom64(authHeader).Split(":");
+            User user = GetByUsername(headerUsernamePassword[0]);
+
             return user != null && user.Password == HashPassword(headerUsernamePassword[1], user.Salt);
         }
     }

@@ -15,21 +15,21 @@ namespace MyFace.Controllers
         {
             _users = users;
         }
-        
+
         [HttpGet("")]
         public ActionResult<UserListResponse> Search([FromQuery] UserSearchRequest searchRequest)
         {
-            var users = _users.Search(searchRequest);
-            var userCount = _users.Count(searchRequest);
+            System.Collections.Generic.IEnumerable<Models.Database.User> users = _users.Search(searchRequest);
+            int userCount = _users.Count(searchRequest);
             return UserListResponse.Create(searchRequest, users, userCount);
         }
 
         [HttpGet("{id}")]
         public ActionResult<UserResponse> GetById([FromRoute] int id)
         {
-            var authHeader = HttpContext.Request.Headers["Authorization"];
+            Microsoft.Extensions.Primitives.StringValues authHeader = HttpContext.Request.Headers["Authorization"];
             //_users.UserHasAccess(authHeader)
-            var user = _users.GetById(id);
+            Models.Database.User user = _users.GetById(id);
             return new UserResponse(user);
         }
 
@@ -40,11 +40,11 @@ namespace MyFace.Controllers
             {
                 return BadRequest(ModelState);
             }
-            
-            var user = _users.Create(newUser);
 
-            var url = Url.Action("GetById", new { id = user.Id });
-            var responseViewModel = new UserResponse(user);
+            Models.Database.User user = _users.Create(newUser);
+
+            string url = Url.Action("GetById", new { id = user.Id });
+            UserResponse responseViewModel = new UserResponse(user);
             return Created(url, responseViewModel);
         }
 
@@ -56,10 +56,10 @@ namespace MyFace.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = _users.Update(id, update);
+            Models.Database.User user = _users.Update(id, update);
             return new UserResponse(user);
         }
-        
+
         [HttpDelete("{id}")]
         public IActionResult Delete([FromRoute] int id)
         {

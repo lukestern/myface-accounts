@@ -1,6 +1,6 @@
-﻿using System;
+﻿using MyFace.Models.Database;
+using System;
 using System.Text.Json.Serialization;
-using MyFace.Models.Database;
 
 namespace MyFace.Models.Response
 {

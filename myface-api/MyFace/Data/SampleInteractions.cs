@@ -1,7 +1,7 @@
-﻿using System;
+﻿using MyFace.Models.Database;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using MyFace.Models.Database;
 
 namespace MyFace.Data
 {

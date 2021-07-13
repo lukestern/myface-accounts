@@ -21,8 +21,8 @@ namespace MyFace
         public static readonly ILoggerFactory
             LoggerFactory = Microsoft.Extensions.Logging.LoggerFactory.Create(builder => { builder.AddConsole(); });
 
-        private static string CORS_POLICY_NAME = "_myfaceCorsPolicy";
-        
+        private static readonly string CORS_POLICY_NAME = "_myfaceCorsPolicy";
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -42,9 +42,9 @@ namespace MyFace
                         .AllowAnyHeader();
                 });
             });
-            
+
             services.AddControllers();
-            
+
             services.AddTransient<IPostsRepo, PostsRepo>();
             services.AddTransient<IUsersRepo, UsersRepo>();
         }

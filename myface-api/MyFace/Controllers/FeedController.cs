@@ -14,12 +14,12 @@ namespace MyFace.Controllers
         {
             _posts = posts;
         }
-        
+
         [HttpGet("")]
         public ActionResult<FeedModel> GetFeed([FromQuery] FeedSearchRequest searchRequest)
         {
-            var posts = _posts.SearchFeed(searchRequest);
-            var postCount = _posts.Count(searchRequest);
+            System.Collections.Generic.IEnumerable<Models.Database.Post> posts = _posts.SearchFeed(searchRequest);
+            int postCount = _posts.Count(searchRequest);
             return FeedModel.Create(searchRequest, posts, postCount);
         }
     }

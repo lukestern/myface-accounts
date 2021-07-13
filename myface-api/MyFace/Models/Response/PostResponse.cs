@@ -1,5 +1,5 @@
-﻿using System;
-using MyFace.Models.Database;
+﻿using MyFace.Models.Database;
+using System;
 
 namespace MyFace.Models.Response
 {
@@ -11,7 +11,7 @@ namespace MyFace.Models.Response
         {
             _post = post;
         }
-        
+
         public int Id => _post.Id;
         public string Message => _post.Message;
         public string ImageUrl => _post.ImageUrl;

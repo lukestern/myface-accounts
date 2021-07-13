@@ -1,15 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using MyFace.Models.Database;
+﻿using MyFace.Models.Database;
 using MyFace.Repositories;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MyFace.Data
 {
     public static class SampleUsers
     {
         public static int NumberOfUsers = 100;
-        
-        private static IList<IList<string>> _data = new List<IList<string>>
+
+        private static readonly IList<IList<string>> _data = new List<IList<string>>
         {
             new List<string> { "Kania", "Placido", "kplacido0", "kplacido0@qq.com" },
             new List<string> { "Scotty", "Gariff", "sgariff1", "sgariff1@biblegateway.com" },
@@ -112,7 +112,7 @@ namespace MyFace.Data
             new List<string> { "Jane", "Iceton", "jiceton2q", "jiceton2q@lulu.com" },
             new List<string> { "Marjy", "Beadell", "mbeadell2r", "mbeadell2r@delicious.com" }
         };
-        
+
         public static IEnumerable<User> GetUsers()
         {
             return Enumerable.Range(0, NumberOfUsers).Select(CreateRandomUser);
@@ -120,7 +120,7 @@ namespace MyFace.Data
 
         private static User CreateRandomUser(int index)
         {
-            var salt = UsersRepo.GetSalt();
+            byte[] salt = UsersRepo.GetSalt();
             return new User
             {
                 FirstName = _data[index][0],

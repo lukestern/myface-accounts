@@ -1,17 +1,17 @@
-﻿using System;
-using MyFace.Models.Database;
+﻿using MyFace.Models.Database;
+using System;
 
 namespace MyFace.Data
 {
     public class RandomNumberGenerator
     {
-        private static Random _random = new Random();
-        
+        private static readonly Random _random = new Random();
+
         public static int GetUserId()
         {
             return _random.Next(1, SampleUsers.NumberOfUsers + 1);
         }
-        
+
         public static int GetPostId()
         {
             return _random.Next(1, SamplePosts.NumberOfPosts + 1);

@@ -5,11 +5,11 @@ namespace MyFace.Data
 {
     public class ImageGenerator
     {
-        private static IEnumerable<int> _brokenImages = new List<int>
+        private static readonly IEnumerable<int> _brokenImages = new List<int>
         {
 
         };
-        
+
         public static string GetPostImage(int index)
         {
             return GetImage(100 + index, 1600, 900);

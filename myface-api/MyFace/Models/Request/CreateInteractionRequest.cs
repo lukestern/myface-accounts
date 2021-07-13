@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using MyFace.Models.Database;
+﻿using MyFace.Models.Database;
+using System.ComponentModel.DataAnnotations;
 
 namespace MyFace.Models.Request
 {
@@ -7,10 +7,10 @@ namespace MyFace.Models.Request
     {
         [Required]
         public InteractionType InteractionType { get; set; }
-        
+
         [Required]
         public int UserId { get; set; }
-        
+
         [Required]
         public int PostId { get; set; }
     }

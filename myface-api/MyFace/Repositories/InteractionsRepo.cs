@@ -1,8 +1,8 @@
-﻿using System;
+﻿using MyFace.Models.Database;
+using MyFace.Models.Request;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using MyFace.Models.Database;
-using MyFace.Models.Request;
 
 namespace MyFace.Repositories
 {
@@ -14,7 +14,7 @@ namespace MyFace.Repositories
         Interaction Create(CreateInteractionRequest create);
         void Delete(int id);
     }
-    
+
     public class InteractionsRepo : IInteractionsRepo
     {
         private readonly MyFaceDbContext _context;
@@ -23,7 +23,7 @@ namespace MyFace.Repositories
         {
             _context = context;
         }
-        
+
         public IEnumerable<Interaction> Search(SearchRequest search)
         {
             return _context.Interactions
@@ -43,7 +43,7 @@ namespace MyFace.Repositories
 
         public Interaction Create(CreateInteractionRequest create)
         {
-            var insertResult = _context.Interactions.Add(new Interaction
+            Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<Interaction> insertResult = _context.Interactions.Add(new Interaction
             {
                 Date = DateTime.Now,
                 Type = create.InteractionType,
@@ -56,7 +56,7 @@ namespace MyFace.Repositories
 
         public void Delete(int id)
         {
-            var interaction = GetById(id);
+            Interaction interaction = GetById(id);
             _context.Interactions.Remove(interaction);
             _context.SaveChanges();
         }

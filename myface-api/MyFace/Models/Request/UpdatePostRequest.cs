@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MyFace.Models.Request
+﻿namespace MyFace.Models.Request
 {
     public class UpdatePostRequest
     {

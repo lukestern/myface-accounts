@@ -1,8 +1,7 @@
-﻿using System;
+﻿using MyFace.Models.Database;
+using MyFace.Models.Request;
 using System.Collections.Generic;
 using System.Linq;
-using MyFace.Models.Database;
-using MyFace.Models.Request;
 
 namespace MyFace.Models.Response
 {
@@ -12,16 +11,16 @@ namespace MyFace.Models.Response
         {
             User = new FeedUserModel(interaction.User);
         }
-        
+
         public FeedUserModel User { get; }
     }
-    
+
     public class FeedUserModel : UserResponse
     {
         public FeedUserModel(User user) : base(user)
         { }
     }
-    
+
     public class FeedPostModel : PostResponse
     {
         public FeedPostModel(Post post) : base(post)
@@ -42,12 +41,12 @@ namespace MyFace.Models.Response
 
     public class FeedModel : ListResponse<FeedPostModel>
     {
-        private FeedModel(SearchRequest search, IEnumerable<FeedPostModel> items, int totalNumberOfItems) 
+        private FeedModel(SearchRequest search, IEnumerable<FeedPostModel> items, int totalNumberOfItems)
             : base(search, items, totalNumberOfItems, "feed") { }
 
         public static FeedModel Create(SearchRequest searchRequest, IEnumerable<Post> posts, int totalNumberOfItems)
         {
-            var feedModels = posts.Select(p => new FeedPostModel(p));
+            IEnumerable<FeedPostModel> feedModels = posts.Select(p => new FeedPostModel(p));
             return new FeedModel(searchRequest, feedModels, totalNumberOfItems);
         }
     }
