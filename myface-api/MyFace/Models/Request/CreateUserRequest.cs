@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MyFace.Repositories;
+using System.ComponentModel.DataAnnotations;
 
 namespace MyFace.Models.Request
 {
@@ -27,5 +28,7 @@ namespace MyFace.Models.Request
         [Required]
         [RegularExpression(PasswordRegEx.Expression)]
         public string Password { get; set; }
+
+        public UserRole Role => UserRole.Member;
     }
 }

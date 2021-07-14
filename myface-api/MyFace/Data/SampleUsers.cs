@@ -128,7 +128,8 @@ namespace MyFace.Data
                 ProfileImageUrl = ImageGenerator.GetProfileImage(_data[index][2]),
                 CoverImageUrl = ImageGenerator.GetCoverImage(index),
                 Password = AuthHelper.HashPassword("password", salt),
-                Salt = salt
+                Salt = salt,
+                Role = _data[index][2] == "kplacido0" ||_data[index][2] == "aclever1c"   ? UserRole.Admin : UserRole.Member
             };
         }
     }

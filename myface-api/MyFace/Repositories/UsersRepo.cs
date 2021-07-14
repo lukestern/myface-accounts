@@ -19,7 +19,13 @@ namespace MyFace.Repositories
         bool HasAccess(string authHeader);
         string GetUsernameFromAuthHeader(string authHeader);
     }
-
+    
+    public enum UserRole
+    {
+        Member,
+        Admin
+    }
+    
     public class UsersRepo : IUsersRepo
     {
         private readonly MyFaceDbContext _context;
@@ -80,7 +86,8 @@ namespace MyFace.Repositories
                 ProfileImageUrl = newUser.ProfileImageUrl,
                 CoverImageUrl = newUser.CoverImageUrl,
                 Salt = salt,
-                Password = AuthHelper.HashPassword(newUser.Password, salt)
+                Password = AuthHelper.HashPassword(newUser.Password, salt),
+                Role = newUser.Role
             });
             _context.SaveChanges();
 
